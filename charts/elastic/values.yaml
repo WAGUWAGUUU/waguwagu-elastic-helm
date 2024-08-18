@@ -16,8 +16,14 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
-securityContext: {}
+podSecurityContext:
+  runAsUser: 1000      # Run as user with UID 1000
+  fsGroup: 1000        # Set group ownership to GID 1000
+
+securityContext:
+  runAsUser: 1000      # Run the container as UID 1000
+  runAsGroup: 1000     # Run the container as GID 1000
+  fsGroup: 1000        # Set group ownership to GID 1000
 
 service:
   type: ClusterIP
@@ -83,3 +89,18 @@ extraVolumeMounts: []
   # Example for mounting a volume into the container
   # - name: elasticsearch-data
   #   mountPath: /usr/share/elasticsearch/data
+
+# Init container to install plugins before starting Elasticsearch
+initContainers:
+  - name: install-plugins
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    command: ["/bin/sh", "-c"]
+    args:
+      - |
+        ./bin/elasticsearch-plugin install analysis-nori --batch
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+    volumeMounts:
+      - name: elasticsearch-data
+        mountPath: /usr/share/elasticsearch/data

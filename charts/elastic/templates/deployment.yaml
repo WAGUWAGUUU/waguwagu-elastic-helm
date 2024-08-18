@@ -36,6 +36,8 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]  # <------ Custom command
+          args: ["./bin/elasticsearch-plugin install --batch analysis-nori && ./bin/elasticsearch"]  # <------ Custom args
           ports:
             - name: http
               containerPort: {{ index .Values.service.ports 0 "port" }}  # Refers to 9200 from values.yaml
