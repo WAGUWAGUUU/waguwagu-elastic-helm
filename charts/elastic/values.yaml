@@ -1,0 +1,85 @@
+replicaCount: 1
+
+image:
+  repository: docker.elastic.co/elasticsearch/elasticsearch
+  pullPolicy: IfNotPresent
+  tag: "7.17.3"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9200
+      targetPort: 9200
+    - name: transport
+      port: 9300
+      targetPort: 9300
+
+ingress:
+  enabled: true
+  hosts:
+    - host: "your-domain.com"
+      paths:
+        - path: /api/v1
+          pathType: Prefix
+  tls: []
+
+resources: {}
+
+env:
+  - name: discovery.type
+    value: "single-node"
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 9200  # Ensure this matches your service port
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 5
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 9200  # Ensure this matches your service port
+  initialDelaySeconds: 60
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 5
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+extraVolumes: []
+  # Example for mounting an emptyDir volume
+  # - name: my-volume
+  #   emptyDir: {}
+
+extraVolumeMounts: []
+  # Example for mounting a volume into the container
+  # - name: elasticsearch-data
+  #   mountPath: /usr/share/elasticsearch/data

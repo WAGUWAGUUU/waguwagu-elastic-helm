@@ -1,0 +1,65 @@
+replicaCount: 1
+
+image:
+  repository: dreamthre/waguwagu-elastic-server
+  pullPolicy: Always
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: ""
+      paths:
+        - path: /api/v1
+          pathType: Prefix
+  tls: []
+
+resources: {}
+
+
+# env:
+#   - name: "SPRING_DATA_MONGODB_URI"
+#     value: "mongodb://root:example@waguwagu-waguwagu-mongo:27017/waguwagu"
+#   - name: SPRING_DATA_REDIS_HOST
+#     value: waguwagu-waguwagu-redis
+#   - name: SPRING_DATA_REDIS_PORT
+#     value: "6379"
+#   - name: "SPRING_DATA_MONGODB_USERNAME"
+#     value: "root"
+#   - name: "SPRING_DATA_MONGODB_PASSWORD"
+#     value: "example"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}

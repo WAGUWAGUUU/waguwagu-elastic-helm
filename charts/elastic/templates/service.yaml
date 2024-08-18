@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "elastic.fullname" . }}
+  labels:
+    {{- include "elastic.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: http
+      port: {{ index .Values.service.ports 0 "port" }}         # Refers to 9200 from values.yaml
+      targetPort: {{ index .Values.service.ports 0 "targetPort" }}   # Refers to 9200 from values.yaml
+    - name: transport
+      port: {{ index .Values.service.ports 1 "port" }}         # Refers to 9300 from values.yaml
+      targetPort: {{ index .Values.service.ports 1 "targetPort" }}   # Refers to 9300 from values.yaml
+  selector:
+    {{- include "elastic.selectorLabels" . | nindent 4 }}
