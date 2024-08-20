@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "waguwagu-mongo.fullname" . }}
+  name: {{ include "elastic.fullname" . }}
   labels:
-    {{- include "waguwagu-mongo.labels" . | nindent 4 }}
+    {{- include "elastic.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "waguwagu-mongo.selectorLabels" . | nindent 6 }}
+      {{- include "elastic.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "waguwagu-mongo.labels" . | nindent 8 }}
+        {{- include "elastic.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "waguwagu-mongo.serviceAccountName" . }}
+      serviceAccountName: {{ include "elastic.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
