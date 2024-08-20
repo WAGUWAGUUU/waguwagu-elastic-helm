@@ -38,15 +38,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ index .Values.service.ports 0 "port" }}  # Refers to 9200 from values.yaml
               protocol: TCP
-          command: {{- toYaml .Values.command | nindent 12 }}  # <------ command from values.yaml
-          args: {{- toYaml .Values.args | nindent 12 }}        # <------ args from values.yaml
+            - name: transport
+              containerPort: {{ index .Values.service.ports 1 "port" }}  # Refers to 9300 from values.yaml
+              protocol: TCP
           env:
             {{- range .Values.env }}
             - name: {{ .name }}
               value: {{ .value | quote }}
-            {{- end }}
+            {{- end }}    
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
