@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "elastic.fullname" . }}
+  name: {{ include "waguwagu-mongo.fullname" . }}
   labels:
-    {{- include "elastic.labels" . | nindent 4 }}
+    {{- include "waguwagu-mongo.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "elastic.selectorLabels" . | nindent 6 }}
+      {{- include "waguwagu-mongo.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "elastic.labels" . | nindent 8 }}
+        {{- include "waguwagu-mongo.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "elastic.serviceAccountName" . }}
+      serviceAccountName: {{ include "waguwagu-mongo.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -36,20 +36,17 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/bin/sh", "-c"]  # <------ Custom command
-          args: ["./bin/elasticsearch-plugin install --batch analysis-nori && ./bin/elasticsearch"]  # <------ Custom args
           ports:
             - name: http
-              containerPort: {{ index .Values.service.ports 0 "port" }}  # Refers to 9200 from values.yaml
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
-            - name: transport
-              containerPort: {{ index .Values.service.ports 1 "port" }}  # Refers to 9300 from values.yaml
-              protocol: TCP
+          command: {{- toYaml .Values.command | nindent 12 }}  # <------ command from values.yaml
+          args: {{- toYaml .Values.args | nindent 12 }}        # <------ args from values.yaml
           env:
             {{- range .Values.env }}
             - name: {{ .name }}
               value: {{ .value | quote }}
-            {{- end }}    
+            {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

@@ -38,8 +38,8 @@ service:
 ingress:
   enabled: true
   hosts:
-    - host: "your-domain.com"
-      paths:
+    # - host: "your-domain.com"
+    - paths:
         - path: /api/v1
           pathType: Prefix
   tls: []
