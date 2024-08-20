@@ -35,14 +35,14 @@ service:
       port: 9300
       targetPort: 9300
 
-# ingress:
-#   enabled: true
-#   hosts:
-#     # - host: "your-domain.com"
-#     - paths:
-#         - path: /api/v1
-#           pathType: Prefix
-#   tls: []
+ingress:
+  enabled: true
+  hosts:
+    # - host: "your-domain.com"
+    - paths:
+        - path: /api/v1
+          pathType: Prefix
+  tls: []
 
 resources: {}
 
