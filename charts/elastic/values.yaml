@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: docker.elastic.co/elasticsearch/elasticsearch
   pullPolicy: IfNotPresent
-  tag: "7.17.3"
+  tag: "7.17.3"  # Ensure this tag is compatible with your server
 
 imagePullSecrets: []
 nameOverride: ""
@@ -99,7 +99,7 @@ extraVolumeMounts: []
 # Init container to install plugins before starting Elasticsearch
 initContainers:
   - name: install-plugins
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.3"
     command: ["/bin/sh", "-c"]
     args:
       - |
@@ -117,4 +117,3 @@ initContainers:
     command: ["sysctl", "-w", "vm.max_map_count=262144"]
     securityContext:
       privileged: true
-

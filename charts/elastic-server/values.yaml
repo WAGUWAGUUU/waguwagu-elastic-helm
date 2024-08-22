@@ -18,8 +18,14 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
-securityContext: {}
+podSecurityContext:
+  runAsUser: 1000      # Ensuring the container runs with a non-root user
+  fsGroup: 1000        # Set group ownership to GID 1000
+
+securityContext:
+  runAsUser: 1000      # Ensuring the container runs with a non-root user
+  runAsGroup: 1000     # Run the container as GID 1000
+  fsGroup: 1000        # Set group ownership to GID 1000
 
 service:
   type: ClusterIP
@@ -37,15 +43,20 @@ ingress:
           pathType: Prefix
   tls: []
 
-resources: {}
-
-
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "500m"
+  limits:
+    memory: "4Gi"
+    cpu: "1"
 # env:
 #   - name: "SPRING_APPLICATION_NAME"
 #     value: "elastic-application"
 #   - name: "SPRING_ELASTICSEARCH_REST_URIS"
-#     value: "http://localhost:9200"
-
+#     value: "http://elastic:9200"  # Ensure this points to the correct Elasticsearch service URL
+#   - name: "SPRING_PROFILES_ACTIVE"
+#     value: "production"  # Set the active profile to 'production', adjust as necessary
 
 autoscaling:
   enabled: false
