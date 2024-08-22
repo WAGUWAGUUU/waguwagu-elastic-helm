@@ -103,7 +103,8 @@ initContainers:
     command: ["/bin/sh", "-c"]
     args:
       - |
-        ./bin/elasticsearch-plugin install analysis-nori --batch
+        ./bin/elasticsearch-plugin install analysis-nori --batch && \
+        ./bin/elasticsearch-plugin install analysis-synonym --batch
     securityContext:
       runAsUser: 1000
       runAsGroup: 1000
