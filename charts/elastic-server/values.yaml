@@ -22,7 +22,7 @@ podSecurityContext: {}
 securityContext: {}
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 8080
 
 ingress:
@@ -45,15 +45,13 @@ resources: {}
 #     value: "elastic-application"
 #   - name: "SPRING_ELASTICSEARCH_REST_URIS"
 #     value: "http://localhost:9200"
-#   - name: "SPRING_LOGGING_LEVEL_ROOT"
-#     value: "info"
 
 
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
+  maxReplicas: 200
+  targetCPUUtilizationPercentage: 100
 
 volumes: []
 volumeMounts: []
