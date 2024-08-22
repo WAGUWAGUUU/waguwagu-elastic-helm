@@ -36,7 +36,7 @@ service:
       targetPort: 9300
 
 ingress:
-  enabled: true
+  enabled: false
   hosts:
     # - host: "your-domain.com"
     - paths:
